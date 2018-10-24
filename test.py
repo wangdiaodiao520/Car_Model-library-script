@@ -1,13 +1,16 @@
-import threading
+import requests
+from lxml import etree
 
-def a(i):
-    print(i)
+url = 'http://car.bitauto.com/benchicji-2364/m123304/'
 
-    
-for i in range(5):
-    t = threading.Thread(target=a,args=(i,))
-    t.start()
-    
+response = requests.get(url)
+html = etree.HTML(response.text)
+title = html.xpath('//tbody/tr/td/span[@class="title"]/text()')
+info = html.xpath('//tbody/tr/td/span[@class="info"]/text()')
+print(title,info)
+
+
+
     
     
     

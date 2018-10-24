@@ -105,13 +105,14 @@ def parse_cxjs(pp_list):
             cx_url = trans_url(cx_url)
             #拿到车型下所有年款和年款相对应的url，格式为[{年款：url}，{年款：url}]
             nk_list = parse_cx_url(cx_url)
-            for i in range(len(nk_list)):#在这一步使用多线程提高速度---------
+            for i in range(len(nk_list)):#在这一步使用多线程提高速度
                 nk = nk_list[i]
                 #parse_nk(pp_name,cj_name,cx_name,nk)
+                #'''
                 t = threading.Thread(target=parse_nk,args=(pp_name,cj_name,cx_name,nk))
                 t.start()
                 t.join()
-                
+                #'''
                 
 #请求车型url函数，（功能为从tree页转换到专属页）
 def trans_url(cx_url):
@@ -163,11 +164,32 @@ def parse_nk(pp_name,cj_name,cx_name,nk):
     cx_name_list = []
     #对车型box中的每个tr进行判断，判断其中数据是否是车型数据
     for tr in trs:
-        if len(tr['id'])==16:
+        if len(tr['id'])==16 or len(tr['id'])==17:
             pass
         else:
             cx_x_name = re.sub('.*?款 ','',tr.select('td')[0].select('a')[0].get_text(),re.S)
             save(pp_name,cj_name,cx_name,year,cx_x_name)
+             
+#解析年款url，并进入每一款车型页面提取配置参数信息
+def parse_nk_conf():
+    #年款
+    year = list(nk.keys())[0]
+    #年款url
+    url = 'http://car.bitauto.com' + list(nk.values())[0]
+    #请求url，并定位至车型box
+    response = requests.get(url,headers=head)
+    soup = BeautifulSoup(response.text,'lxml')
+    trs = soup.select('tbody tr')
+    cx_name_list = []
+    #对车型box中的每个tr进行判断，判断其中数据是否是车型数据
+    for tr in trs:
+        if len(tr['id'])==16:
+            pass
+        else:
+            url = 'http://car.bitauto.com' + tr.select('td')[0].select('a')['href']
+            model_page = requests.get(url,headers=head)
+            #提取配置参数------未写
+            
             
 #保存函数
 def save(pp_name,cj_name,cx_name,year,cx_x_name):
