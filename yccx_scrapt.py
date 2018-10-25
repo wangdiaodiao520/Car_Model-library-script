@@ -154,7 +154,7 @@ def parse_cx_url(cx_url):
 #解析年款url
 def parse_nk(pp_name,cj_name,cx_name,nk):
     #年款
-    year = list(nk.keys())[0]
+    year = list(nk.keys())[0].replace('款','')
     #年款url
     url = 'http://car.bitauto.com' + list(nk.values())[0]
     #请求url，并定位至车型box
@@ -188,7 +188,7 @@ def parse_nk_conf():
         else:
             url = 'http://car.bitauto.com' + tr.select('td')[0].select('a')['href']
             model_page = requests.get(url,headers=head)
-            #提取配置参数------未写
+            #提取配置参数------*********未写,以后再说**********
             
             
 #保存函数

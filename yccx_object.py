@@ -87,6 +87,11 @@ class Spider:
                 for i in range(len(nk_list)):
                     nk = nk_list[i]
                     yield [pp_name,cj_name,cx_name,nk]
+                    '''
+                    t = threading.Thread(target=parse_nk,args=(pp_name,cj_name,cx_name,nk))
+                    t.start()
+                    t.join()
+                    '''
         
     def parse_nk(self,pp_name,cj_name,cx_name,nk):
         year = list(nk.keys())[0].replace('款','')
